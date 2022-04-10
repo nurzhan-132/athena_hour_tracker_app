@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class BottomNavBarWidget extends StatefulWidget {
@@ -25,6 +27,7 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
           ),
         ),
         child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           onTap: onTap,
           currentIndex: currentIndex,
           backgroundColor: Color.fromRGBO(25, 29, 33, 1),
@@ -33,18 +36,19 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
           showUnselectedLabels: false,
           showSelectedLabels: true,
           elevation: 0,          
+          // ignore: prefer_const_literals_to_create_immutables
           items: [
-            BottomNavigationBarItem(
+            BottomNavigationBarItem(              
               icon: Icon(Icons.home, color: Color.fromRGBO(232, 238, 243, 1),),
-              title: Text("Home"),               
+              label: ("Home"),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today, color: Color.fromRGBO(232, 238, 243, 1),), 
-              title: Text("Calendar"),
+              label: ("Calendar"),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person, color: Color.fromRGBO(232, 238, 243, 1),), 
-              title: Text("Profile"),
+              label: ("Profile"),
             ),
           ],
         ),
