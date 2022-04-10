@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "74227861677",
+    "project_id": "athenatimetracker",
+    "storage_bucket": "athenatimetracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74227861677:android:4d8fb8dfe1f65b5900de24",
+        "android_client_info": {
+          "package_name": "com.example.athena_hour_tracker_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74227861677-mc0usvdsfumdu2e7gc5j7npg75msntef.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.athena_hour_tracker_app",
+            "certificate_hash": "7a87eacab790b20098ce0ff598654d16621b66ea"
+          }
+        },
+        {
+          "client_id": "74227861677-osu7b4cvbpd6ukj5o6siq8aoap2sdj2a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqJAxrfpB43ZBhK-VP_qS_DdKzJ127Jpg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74227861677-osu7b4cvbpd6ukj5o6siq8aoap2sdj2a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
