@@ -1,9 +1,11 @@
 import 'package:athena_hour_tracker_app/Screens/Main-Menu/main_menu_page.dart';
 import 'package:athena_hour_tracker_app/Screens/Widgets/RoundedButtonWidget.dart';
 import 'package:athena_hour_tracker_app/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:athena_hour_tracker_app/Screens/Login/Components/login_background_widget.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginBodyWidget extends StatefulWidget {
   const LoginBodyWidget({Key? key}) : super(key: key);
@@ -16,6 +18,7 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -41,19 +44,28 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
                 color: kPrimaryLightColor,
                 borderRadius: BorderRadius.circular(29)),
             child: TextFormField(
+              autofocus: false,
               controller: _nameController,
-              /*validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your username';
+              validator: (value) {
+                if(value!.isEmpty || value == null) {
+                  return ("Please Enter Your Email");
+                }
+                if(!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                   .hasMatch(value)) {
+                  return ("Please Enter a valid email");
                 }
                 return null;
-              },*/
+              },
+              onSaved: (value) {
+                _nameController.text = value!;
+              },
+              
               decoration: const InputDecoration(
                 icon: Icon(
                   Icons.person,
                   color: kPrimaryColor,
                 ),
-                hintText: "Username",
+                hintText: "Email",
                 border: InputBorder.none,
               ),
             ),
@@ -66,14 +78,21 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
                 color: kPrimaryLightColor,
                 borderRadius: BorderRadius.circular(29)),
             child: TextFormField(
+              autofocus: false,
               obscureText: true,
               controller: _passwordController,
-              /*validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your password';
+              validator: (value) {
+                RegExp regex = RegExp(r'^.{6,}$');
+                if(value!.isEmpty || value == null) {
+                  return ("Password is required for login");
                 }
-                return null;
-              },*/
+                if(!regex.hasMatch(value)) {
+                  return ("Enter Valid Password(Min. 6 Character)");
+                }
+              },
+              onSaved: (value) {
+                _passwordController.text = value!;
+              },
               decoration: const InputDecoration(
                 icon: Icon(
                   Icons.lock,
@@ -87,10 +106,13 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
                 border: InputBorder.none,
               ),
             ),
-          ),
+          ),          
+
           RoundedButtonWidget(
               text: "LOGIN",
-              press: (checkLogin),
+              press: () {
+                checkLogin(_nameController.text, _passwordController.text);
+              },
               color: kPrimaryColor,
               textColor: Colors.white),
           Row(
@@ -120,10 +142,23 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
     );
   }
 
-  void checkLogin() {
-    Navigator.of(context)
+  void checkLogin(String email, String password) async {
+    if(_formKey.currentState!.validate()) {
+      await _auth
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((uid) => {
+              Fluttertoast.showToast(msg: "Login Successful"),
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const MainMenuPage()))
+          })
+        .catchError((e) {
+          Fluttertoast.showToast(msg: e!.message);
+        });
+
+    }
+    /*Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => const MainMenuPage()));
-    print("Pressed");
+    print("Pressed");*/
   }
 }
 

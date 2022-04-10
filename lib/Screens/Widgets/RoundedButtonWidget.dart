@@ -1,4 +1,8 @@
+// ignore: file_names
+// ignore_for_file: all
+// ignore_for_file: type=lint
 import 'package:flutter/material.dart';
+import 'package:athena_hour_tracker_app/constants.dart';
 
 class RoundedButtonWidget extends StatelessWidget {
   final String text;
