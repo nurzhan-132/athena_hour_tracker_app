@@ -13,10 +13,10 @@ class MainMenuBackgroundWidget extends StatelessWidget {
       width: double.infinity,
       height: size.height,
       child: Stack(
-        alignment: Alignment.center,
+        alignment: Alignment.bottomCenter,
         children: [
-          Positioned(
-            bottom: 0,            
+          /*Positioned(
+            bottom: 0,
             child: Image.asset(
               "assets/images/main_bottom.png",
               fit: BoxFit.cover,
@@ -24,7 +24,7 @@ class MainMenuBackgroundWidget extends StatelessWidget {
               height: size.height * 0.31,
               width: size.width,
             ),
-          ),
+          ),*/
           child,
         ],
       ),      

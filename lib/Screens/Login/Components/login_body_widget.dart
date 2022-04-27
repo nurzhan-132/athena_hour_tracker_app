@@ -1,11 +1,13 @@
 import 'package:athena_hour_tracker_app/Screens/Main-Menu/main_menu_page.dart';
 import 'package:athena_hour_tracker_app/Screens/Widgets/RoundedButtonWidget.dart';
 import 'package:athena_hour_tracker_app/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:athena_hour_tracker_app/Screens/Login/Components/login_background_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginBodyWidget extends StatefulWidget {
   const LoginBodyWidget({Key? key}) : super(key: key);
@@ -19,6 +21,8 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _auth = FirebaseAuth.instance;
+
+  late SharedPreferences sharedPreferences;
 
   @override
   Widget build(BuildContext context) {
@@ -110,8 +114,63 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
 
           RoundedButtonWidget(
               text: "LOGIN",
-              press: () {
-                checkLogin(_nameController.text, _passwordController.text);
+              press: () async {
+                String id = _nameController.text.trim();
+                String password = _passwordController.text.trim();
+
+                if(id.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Employee ID is still empty!"),
+                  ));
+                }
+                else if(password.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Password is still empty!"),
+                  ));
+                }
+                else {
+                  QuerySnapshot snap = await FirebaseFirestore.instance
+                      .collectionGroup("employee")
+                      .where('id', isEqualTo: id)
+                      .get();
+
+                  try {
+                    if(password == snap.docs[0]['password']) {
+                      sharedPreferences = await SharedPreferences.getInstance();
+                      
+                      sharedPreferences.setString("employeeId", id).then((value) {
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => const MainMenuPage())
+                        );
+                      });
+
+                    }
+                    else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Password is not correct!"),
+                      ));
+                    }
+                  }
+                  catch(e) {
+                    String error = "";
+
+                    if(e.toString() == "RangeError (index): Index out of range: no indices are valid: 0") {
+                      setState(() {
+                        error = "ID $id does not exist";
+                      });
+                    }
+                    else {
+                      setState(() {
+                        error = "Error occured";
+                      });
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(error),
+                    ));
+                  }
+                }
+                //checkLogin(_nameController.text, _passwordController.text);
               },
               color: kPrimaryColor,
               textColor: Colors.white),
