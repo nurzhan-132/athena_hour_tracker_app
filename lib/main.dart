@@ -1,8 +1,9 @@
+import 'package:athena_hour_tracker_app/Screens/Main-Menu/main_menu_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:athena_hour_tracker_app/constants.dart';
 import 'package:athena_hour_tracker_app/Screens/Login/login_page.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,48 @@ class AthenaWork extends StatelessWidget {
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: LoginPage(),
+      home: const LoginCheck(),
     );
   }
 }
+
+class LoginCheck extends StatefulWidget {
+  const LoginCheck({Key? key}) : super(key: key);
+
+  @override
+  _LoginCheckState createState() => _LoginCheckState();
+}
+
+class _LoginCheckState extends State<LoginCheck> {
+  bool userAvailable = false;
+  late SharedPreferences sharedPreferences;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentUser();
+  }
+
+  void _getCurrentUser() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+
+    try {
+      if(sharedPreferences.getString('employeeId') != null) {
+        setState(() {
+          userAvailable = true;
+        });
+      }
+    }
+    catch(e) {
+      setState(() {
+        userAvailable = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return userAvailable ? const MainMenuPage() : const LoginPage();
+  }
+}
+

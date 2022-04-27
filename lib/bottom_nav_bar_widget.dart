@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:athena_hour_tracker_app/constants.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavBarWidget extends StatefulWidget {
@@ -10,7 +11,63 @@ class BottomNavBarWidget extends StatefulWidget {
 }
 
 class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
-  late int currentIndex = 0;
+  List<IconData> navigationIcons = [
+    Icons.home,
+    Icons.calendar_month,
+    Icons.person,
+  ];
+
+  int currIndexOfNav = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 70,
+      margin: EdgeInsets.only(left: 12, right: 12, bottom: 24,),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(50)),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10,
+            offset: Offset(2, 2),
+          )
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(50)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            for(int i = 0; i < navigationIcons.length; i++)...<Expanded> {
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      currIndexOfNav = i;
+                    });
+                  },
+                  child: Center(
+                    child: Icon(
+                      navigationIcons[i],
+                      color: i == currIndexOfNav ? kPrimaryColor: Colors.black26,
+                      size: i == currIndexOfNav ? 30 : 26,
+
+                    ),
+                  ),
+                ),
+              ),
+            }
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  /*late int currentIndex = 0;
   void onTap(int index) {
     setState(() {
       index = currentIndex;
@@ -54,7 +111,7 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
         ),
       ),
     );
-  }
+  }*/
 }
 
 

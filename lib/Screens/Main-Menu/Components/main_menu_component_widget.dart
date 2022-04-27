@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class MainMenuComponentWidget extends StatelessWidget {
-  var path, text;  
+  var path, text;
+  VoidCallback ? navigate;
 
   MainMenuComponentWidget({
     Key? key,
     this.path,
-    this.text     
+    this.text,
+    required this.navigate
   }) : super(key: key);
   
   @override
@@ -24,7 +26,7 @@ class MainMenuComponentWidget extends StatelessWidget {
               image: AssetImage(path),
               colorFilter: ColorFilters.greyscale,                    
               child: InkWell(
-                onTap: () {},                        
+                onTap: navigate,
               ),
               width: size.width * 0.8,
               height: size.height * 0.123,
@@ -33,7 +35,7 @@ class MainMenuComponentWidget extends StatelessWidget {
             
             Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 30,
                 color: Colors.white,
                 fontFamily: "Inter",
