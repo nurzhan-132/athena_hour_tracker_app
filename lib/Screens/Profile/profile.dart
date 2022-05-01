@@ -1,3 +1,4 @@
+import 'package:athena_hour_tracker_app/Screens/Profile/Components/profile_body_widget.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
@@ -11,9 +12,8 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: Text("Profile"),
-      ),
+      backgroundColor: Colors.white,
+      body: ProfileBodyWidget(),
     );
   }
 }

@@ -115,7 +115,7 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
 
           RoundedButtonWidget(
               text: "LOGIN",
-              press: /*() {checkLogin(_nameController.text, _passwordController.text);},*/() async {
+              press: () {checkLogin(_nameController.text, _passwordController.text);}, /*() async {
                 String id = _nameController.text.trim();
                 String password = _passwordController.text.trim();
 
@@ -172,7 +172,7 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
                   }
                 }
                 //checkLogin(_nameController.text, _passwordController.text);
-              },
+              },*/
               color: kPrimaryColor,
               textColor: Colors.white),
           Row(
@@ -185,11 +185,11 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
                 ),
               ),
               GestureDetector(
-                  onTap: () {}, /*{
+                  onTap: () /*{},*/ {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => const SignupPage())
                     );
-                  },*/
+                  },
                   child: const Text(
                     "Signup",
                     style: TextStyle(
@@ -260,7 +260,7 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
         ));
       }
     }
-    /*if(_formKey.currentState!.validate()) {
+    if(_formKey.currentState!.validate()) {
       await _auth
         .signInWithEmailAndPassword(email: email, password: password)
         .then((uid) => {
@@ -273,7 +273,7 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
         });
 
     }
-    */
+
   }
 }
 

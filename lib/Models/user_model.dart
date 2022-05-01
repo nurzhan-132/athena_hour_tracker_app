@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  late final String email;
-  late final String firstName;
-  late final String lastName;
-  late final String id;
-  late final String companyName;
-  late final String uid;
+  String? email;
+  String? firstName;
+  String? lastName;
+  String? id;
+  String? companyName;
+  String? uid;
 
   UserModel(
-      {this.email = "",
-      this.firstName = "",
-      this.lastName = "",
-      this.id = "",
-      this.companyName = "",
-      this.uid = ""});
+      {this.email,
+      this.firstName,
+      this.lastName,
+      this.id,
+      this.companyName,
+      this.uid});
 
-  UserModel copy(
+  /*UserModel copy(
           {String? email,
           String? firstName,
           String? lastName,
@@ -30,7 +30,7 @@ class UserModel {
         id: id ?? this.id,
         companyName: companyName ?? this.companyName,
         uid: uid ?? this.uid,
-      );
+      );*/
 
   // Constructor
 

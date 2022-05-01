@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:athena_hour_tracker_app/Models/user.dart';
 import 'package:athena_hour_tracker_app/Models/user_model.dart';
+import 'package:athena_hour_tracker_app/Screens/Main-Menu/main_menu_page.dart';
 import 'package:athena_hour_tracker_app/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +18,44 @@ class StartEnd extends StatefulWidget {
 }
 
 class _StartEndState extends State<StartEnd> {
-  /*User? user = FirebaseAuth.instance.currentUser;
+
+  String start = '--/--';
+  String end = '--/--';
+  /*@override
+  void initState() {
+    super.initState();
+    _getRecord();
+  }*/
+
+  void _getRecord() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection("employee")
+          .where('id', isEqualTo: Users.username)
+          .get();
+
+      DocumentSnapshot snap2 = await FirebaseFirestore.instance
+          .collection("employee")
+          .doc(snap.docs[0].id)
+          .collection("Records")
+          .doc(
+          DateFormat("dd MMMM yyyy").format(DateTime.now()))
+          .get();
+
+      setState(() {
+        start = snap2['start'];
+        end = snap2['end'];
+      });
+    }
+    catch(e) {
+      setState(() {
+        start = '--/--';
+        end = '--/--';
+      });
+    }
+  }
+
+  User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
   @override
@@ -29,12 +69,21 @@ class _StartEndState extends State<StartEnd> {
       loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+     /* appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+        title: const Text('Start-End'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const MainMenuPage())),
+        ),
+      ),*/
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -54,8 +103,7 @@ class _StartEndState extends State<StartEnd> {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                Users
-                    .username /*"${loggedInUser.firstName} ${loggedInUser.lastName}"*/,
+                /*Users.username*/"${loggedInUser.firstName} ${loggedInUser.lastName}",
                 style: TextStyle(
                   fontSize: size.width / 18,
                   fontFamily: 'Inter',
@@ -105,7 +153,7 @@ class _StartEndState extends State<StartEnd> {
                         ),
                       ),
                       Text(
-                        "09:05",
+                        start,
                         style: TextStyle(
                           fontFamily: "Inter",
                           fontWeight: FontWeight.bold,
@@ -120,7 +168,7 @@ class _StartEndState extends State<StartEnd> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "End",
+                        'End',
                         style: TextStyle(
                           fontFamily: "Inter",
                           fontSize: size.width / 20,
@@ -128,7 +176,7 @@ class _StartEndState extends State<StartEnd> {
                         ),
                       ),
                       Text(
-                        "18:05",
+                        end,
                         style: TextStyle(
                           fontFamily: "Inter",
                           fontWeight: FontWeight.bold,
@@ -178,14 +226,14 @@ class _StartEndState extends State<StartEnd> {
                     ),
                   );
                 }),
-            Container(
+            end == '--/--' ? Container(
               margin: EdgeInsets.only(top: 24),
               child: Builder(
                 builder: (context) {
                   final GlobalKey<SlideActionState> key = GlobalKey();
 
                   return SlideAction(
-                    text: "Slide to Start",
+                    text: start == '--/--' ? 'Slide to Start' : 'Slide to End',
                     textStyle: TextStyle(
                       color: Colors.black54,
                       fontSize: size.width / 20,
@@ -195,14 +243,14 @@ class _StartEndState extends State<StartEnd> {
                     innerColor: kPrimaryColor,
                     key: key,
                     onSubmit: () async {
-                      print(DateFormat("hh:mm").format(DateTime.now()));
+                      Timer(Duration(seconds: 1), () {
+                        key.currentState!.reset();
+                      });
 
                       QuerySnapshot snap = await FirebaseFirestore.instance
                           .collection("employee")
                           .where('id', isEqualTo: Users.username)
                           .get();
-
-                      print(snap.docs[0].id);
 
                       DocumentSnapshot snap2 = await FirebaseFirestore.instance
                           .collection("employee")
@@ -212,10 +260,13 @@ class _StartEndState extends State<StartEnd> {
                               DateFormat("dd MMMM yyyy").format(DateTime.now()))
                           .get();
 
-
                       print(snap2['start']);
                       try {
                         String start = snap2['start'];
+
+                        setState(() {
+                          end = DateFormat('hh:mm').format(DateTime.now());
+                        });
                         await FirebaseFirestore.instance
                             .collection("employee")
                             .doc(snap.docs[0].id)
@@ -227,6 +278,9 @@ class _StartEndState extends State<StartEnd> {
                           "end": DateFormat('hh:mm').format(DateTime.now()),
                         });
                       } catch (e) {
+                        setState(() {
+                          start = DateFormat('hh:mm').format(DateTime.now());
+                        });
                         await FirebaseFirestore.instance
                             .collection("employee")
                             .doc(snap.docs[0].id)
@@ -241,6 +295,8 @@ class _StartEndState extends State<StartEnd> {
                   );
                 },
               ),
+            ) : Container(
+              child: Text('Woohoo, You have completed this day!'),
             ),
           ],
         ),
