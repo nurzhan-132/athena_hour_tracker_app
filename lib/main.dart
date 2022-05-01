@@ -1,4 +1,8 @@
+import 'package:athena_hour_tracker_app/Models/user.dart';
+import 'package:athena_hour_tracker_app/Models/user_model.dart';
 import 'package:athena_hour_tracker_app/Screens/Main-Menu/main_menu_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:athena_hour_tracker_app/constants.dart';
@@ -11,9 +15,9 @@ void main() async {
     options: const FirebaseOptions(
         apiKey: "AIzaSyBqJAxrfpB43ZBhK-VP_qS_DdKzJ127Jpg",
         appId: "1:74227861677:android:4d8fb8dfe1f65b5900de24",
-        messagingSenderId: "74227861677-osu7b4cvbpd6ukj5o6siq8aoap2sdj2a.apps.googleusercontent.com",
-        projectId: "athenatimetracker"
-    ),
+        messagingSenderId:
+            "74227861677-osu7b4cvbpd6ukj5o6siq8aoap2sdj2a.apps.googleusercontent.com",
+        projectId: "athenatimetracker"),
   );
   runApp(const AthenaWork());
 }
@@ -55,13 +59,13 @@ class _LoginCheckState extends State<LoginCheck> {
     sharedPreferences = await SharedPreferences.getInstance();
 
     try {
-      if(sharedPreferences.getString('employeeId') != null) {
+      if (sharedPreferences.getString('employeeId') != null) {
         setState(() {
+          Users.username = sharedPreferences.getString('employeeId')!;
           userAvailable = true;
         });
       }
-    }
-    catch(e) {
+    } catch (e) {
       setState(() {
         userAvailable = false;
       });
@@ -73,4 +77,3 @@ class _LoginCheckState extends State<LoginCheck> {
     return userAvailable ? const MainMenuPage() : const LoginPage();
   }
 }
-

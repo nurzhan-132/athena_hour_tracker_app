@@ -1,4 +1,5 @@
 import 'package:athena_hour_tracker_app/Screens/Main-Menu/main_menu_page.dart';
+import 'package:athena_hour_tracker_app/Screens/Signup/signup_page.dart';
 import 'package:athena_hour_tracker_app/Screens/Widgets/RoundedButtonWidget.dart';
 import 'package:athena_hour_tracker_app/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -114,7 +115,7 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
 
           RoundedButtonWidget(
               text: "LOGIN",
-              press: () async {
+              press: /*() {checkLogin(_nameController.text, _passwordController.text);},*/() async {
                 String id = _nameController.text.trim();
                 String password = _passwordController.text.trim();
 
@@ -131,7 +132,7 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
                 else {
                   QuerySnapshot snap = await FirebaseFirestore.instance
                       .collectionGroup("employee")
-                      .where('id', isEqualTo: id)
+                      .where('id', isEqualTo: id).where('firstName').where('lastName')
                       .get();
 
                   try {
@@ -178,17 +179,19 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Forgot password? ",
+                "Don't have an account? ",
                 style: TextStyle(
                   color: kPrimaryColor,
                 ),
               ),
               GestureDetector(
-                  onTap: () {
-                    print("Tapped");
-                  },
+                  onTap: () {}, /*{
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => const SignupPage())
+                    );
+                  },*/
                   child: const Text(
-                    "Recover",
+                    "Signup",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: kPrimaryColor,
@@ -202,7 +205,62 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
   }
 
   void checkLogin(String email, String password) async {
-    if(_formKey.currentState!.validate()) {
+    String id = _nameController.text.trim();
+    String password = _passwordController.text.trim();
+
+    if(id.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Employee ID is still empty!"),
+      ));
+    }
+    else if(password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Password is still empty!"),
+      ));
+    }
+    else {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collectionGroup("employee")
+          .where('id', isEqualTo: id).where('firstName').where('lastName')
+          .get();
+
+      try {
+        if(password == snap.docs[0]['password']) {
+          sharedPreferences = await SharedPreferences.getInstance();
+
+          sharedPreferences.setString("employeeId", id).then((value) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const MainMenuPage())
+            );
+          });
+
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Password is not correct!"),
+          ));
+        }
+      }
+      catch(e) {
+        String error = "";
+
+        if(e.toString() == "RangeError (index): Index out of range: no indices are valid: 0") {
+          setState(() {
+            error = "ID $id does not exist";
+          });
+        }
+        else {
+          setState(() {
+            error = "Error occured";
+          });
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(error),
+        ));
+      }
+    }
+    /*if(_formKey.currentState!.validate()) {
       await _auth
         .signInWithEmailAndPassword(email: email, password: password)
         .then((uid) => {
@@ -215,9 +273,7 @@ class _LoginBodyWidgetState extends State<LoginBodyWidget> {
         });
 
     }
-    /*Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const MainMenuPage()));
-    print("Pressed");*/
+    */
   }
 }
 

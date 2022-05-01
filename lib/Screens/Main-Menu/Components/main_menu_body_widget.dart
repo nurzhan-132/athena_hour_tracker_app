@@ -11,65 +11,48 @@ import 'package:flutter/material.dart';
 import '../../../bottom_nav_bar_widget.dart';
 
 class MainMenuBodyWidget extends StatefulWidget {
-  const MainMenuBodyWidget({ Key? key }) : super(key: key);
+  const MainMenuBodyWidget({Key? key}) : super(key: key);
 
   @override
   State<MainMenuBodyWidget> createState() => _MainMenuBodyWidgetState();
 }
 
 class _MainMenuBodyWidgetState extends State<MainMenuBodyWidget> {
-
-  User? user = FirebaseAuth.instance.currentUser;
-  UserModel loggedInUser = UserModel();
-
-  /*@override
-  void initState() {
-    super.initState();
-    FirebaseFirestore.instance
-        .collection("employee")
-        .doc(user!.uid)
-        .get()
-        .then((value) {
-          this.loggedInUser = UserModel.fromMap(value.data());
-          setState(() {
-
-          });
-    });
-  }*/
-
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;      
+    Size size = MediaQuery.of(context).size;
     return MainMenuBackgroundWidget(
       child: Padding(
         padding: const EdgeInsets.only(top: 100),
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MainMenuComponentWidget(path: "assets/images/main_menu_qr.jpg", text: "QR-Code",
-                navigate: () => Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => Qr()))
-              ),
-              const SizedBox(height: 50.0,),
-              MainMenuComponentWidget(path: "assets/images/proxy.jpg", text: "Proxy",
-                  navigate: () => Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => Proxy()))
-              ),
-              const SizedBox(height: 50.0,),
-              MainMenuComponentWidget(path: "assets/images/start_end.jpg", text: "Start/End",
-                  navigate: () => Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => StartEnd()))
-              ),
-              const Spacer(),              
-              //const BottomNavBarWidget(),
-            ],
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MainMenuComponentWidget(
+                path: "assets/images/main_menu_qr.jpg",
+                text: "QR-Code",
+                navigate: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Qr()))),
+            const SizedBox(
+              height: 50.0,
+            ),
+            MainMenuComponentWidget(
+                path: "assets/images/proxy.jpg",
+                text: "Proxy",
+                navigate: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Proxy()))),
+            const SizedBox(
+              height: 50.0,
+            ),
+            MainMenuComponentWidget(
+                path: "assets/images/start_end.jpg",
+                text: "Start/End",
+                navigate: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => StartEnd()))),
+            const Spacer(),
+            //const BottomNavBarWidget(),
+          ],
         ),
-      ),      
+      ),
     );
   }
-  
 }
-
-
-
-

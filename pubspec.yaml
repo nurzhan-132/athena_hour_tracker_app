@@ -33,6 +33,7 @@ dependencies:
   firebase_core: ^1.14.0
   shared_preferences: ^2.0.13
   slide_to_act: ^2.0.1
+  intl: ^0.17.0
   flutter:
     sdk: flutter
   flutter_svg: ^1.0.3
