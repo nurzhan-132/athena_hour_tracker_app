@@ -38,3 +38,12 @@ Athena's goal is to give users the ability to track work time both remotely and 
 **Acceptance Criteria**
 ----------
 Developing a project on Dart Flutter every week we trying to modify and upgrade our project according to CSS 342 Software Engineering course
+
+
+
+ ![screenshot](screenshots/image_2025-03-04_19-02-05.png)
+ ![screenshot](screenshots/image_2025-03-04_19-02-52.png)
+ ![screenshot](screenshots/image_2025-03-04_19-05-22.png)
+ ![screenshot](screenshots/image_2025-03-04_19-05-32.png) 
+ ![screenshot](screenshots/image_2025-03-04_19-03-22.png)
+ ![screenshot](screenshots/login.png)
